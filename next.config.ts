@@ -4,9 +4,13 @@ const isProd = process.env.NODE_ENV === 'production';
 const repo = 'mapAppV2';
 
 const nextConfig: NextConfig = {
+  reactStrictMode: true,
+  images: {
+    unoptimized: true,
+  },
+  assetPrefix: isProd ? `/${repo}/` : '',
+  basePath: isProd ? `/${repo}` : '',
   output: 'export',
-  assetPrefix: isProd ? `/${repo}/` : undefined,
-  basePath: isProd ? `/${repo}` : undefined,
   /* config options here */
 };
 

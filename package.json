@@ -1,5 +1,6 @@
 {
   "name": "chismapav2",
+  "type": "module",
   "version": "0.1.0",
   "private": true,
   "homepage": "https://adamfehse.github.io/mapAppV2",
@@ -10,6 +11,13 @@
     "lint": "next lint",
     "predeploy": "pnpm run build",
     "deploy": "gh-pages -d out"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/AdamFehse/mapAppV2"
+  },
+  "bugs": {
+    "url": "https://github.com/AdamFehse/mapAppV2/issues"
   },
   "dependencies": {
     "leaflet": "^1.9.4",

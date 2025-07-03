@@ -89,13 +89,13 @@ export function CSSMaskedTileLayer() {
           return canvas.toDataURL();
         };
 
-        // Create the masked foreground layer
+        // Create the masked foreground layer with modern satellite imagery
         const foregroundLayer = new L.TileLayer.Mask(
           'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
           {
             maskUrl: createCircularMask(),
-            maskSize: 512,
-            attribution: '&copy; Esri'
+            maskSize: 1024,
+            attribution: '&copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
           }
         );
 

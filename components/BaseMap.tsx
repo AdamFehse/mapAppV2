@@ -1,46 +1,35 @@
-import { MapContainer, TileLayer } from 'react-leaflet';
+import React, { useEffect } from 'react';
+import { MapContainer, TileLayer, useMap } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
+import 'leaflet.markercluster/dist/MarkerCluster.css';
+import 'leaflet.markercluster/dist/MarkerCluster.Default.css';
 import '../app/globals.css';
 import { useProjects } from './useProjects';
-import { ProjectMarker } from './ProjectMarker';
-import { CSSMaskedTileLayer } from './CSSMaskedTileLayer';
-import { useEffect } from 'react';
+import MarkerCluster from './MarkerCluster';
 
-export default function Map() {
+// Component to get map instance for MarkerCluster
+function MapContent() {
+  const map = useMap();
+  const { projects } = useProjects();
+  
+  return <MarkerCluster map={map} projects={projects} />;
+}
+
+interface BaseMapProps {
+  children?: React.ReactNode;
+  showMarkers?: boolean;
+}
+
+export default function BaseMap({ children, showMarkers = true }: BaseMapProps) {
   const { projects, error } = useProjects();
 
-  // Load the mask plugin
+  // Load the mask plugin script (needed for mask mode)
   useEffect(() => {
     // Embed the mask plugin script directly to avoid GitHub Pages issues
     const scriptContent = `
       (function() {
-        var defaultMaskUrl = [
-          'data:image/png;base64,',
-          'iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAEC0lEQVRYR7WX+YuVZRTHP09pZZot',
-          'WpiamktpUWJGC6GEoLigRIo/CFr/WgtqGqREuKRptBCUQmkqKuMSU+mMy4zOlOPUK5/LeeT1eu/c',
-          '9+rMAy/vMPfe53zP93zPlmjzFEWRAB/PA/EugNqTUvJd+eSLWv6gKAqNPQg8BDwc71EB5j9gALgR',
-          '78GUkv9reVoCCMMafAyYADwNTAQeB8YEgH+Ba8Bl4CJwCegB/mkFpCmAoFpvNTQVmBPPDOAZYDzw',
-          'SADQewF0A38Ap4GTwLkAcyOl9H8jOhoCCOOPAs8CLwOvA68AzwcLfjY6QuK9Xj6ox8DVAPE7cAj4',
-          'FTgPXG/Exl0AwvhYQE/fBBYD84HJwLiIfRZf+feKLwPpj1AcB74HfghGeupB3AGg5LmeanhpGJdy',
-          '6VaEVY5ADMsVQBAHgG+AY0BvORz1ABTbc8C7wCpgYcRbLbQUbB0yGTEshsRw7Ab2BhP9OV1vXxpq',
-          'V91vA+8Di4L2ezGesWQQZscvwBfAfqAzpXTTL5UBmFLzgPeA1aF4xdau5/UhEoTh6AT2AdsDjHqo',
-          'VTXCe/Nb6jcEC0+1EfNWulAT14HfgG3AV2ZGSmkwA5DmWcBaYB3wQhSZVhe387mUy4LGN5ueKaW+',
-          'DMC0U3AbgeXAJMAyO5xHFhSkKfkRcNAsSUH/E0H/h8A7wJPDEPtG4K0PhuET4EvgzwzAPNdzAciE',
-          'jNyv+BoBsFmdArYAnwNnBCDVUr4G2AS8OgLxz2DUwZnIBEGcygCs+RmANd+UHIkjgLP1AKzrMrAS',
-          '+ABYAAxH/jdywHpgp9wa6diRNWDOLwkNWAltwSOhAbvlUeBTYGetIkYDssu9EQzYgCxKVRtP1VBZ',
-          'EXuBn4CPoyp25zpgE3oRWB99YGaMXVUvr/I9G9MFYE8w8DNwuxDprTrQe0uxA4hhyH2/ioGhvqP3',
-          '1oATkX47gI6U0kC5GRkGBw9L8QpgerAwHFpQ/c6K3wKfAT86PzoXlAHkemBDsh2/FcOno9f9HKdj',
-          'Y28FVHi7agUoJYvSnUovisL8nw0si7S0JliWDdG9MKFxu6Cp93U0oiMxFdX2h/qJyJg7fjsXqAdT',
-          '07/tFTJRVRN5ENF4B/BdiO+wU3J5Lmw0lOqtApwbU5GTkSBMzTwXNgOiYb2WXjufnpt2dj5D0JUn',
-          'oRzTZmO5IGTC4fS1qBEvAVMCXD2QbDjvB3/H7OcYZrrZgBRdbQwrn6EWE71UE3quLmTBWjEtxCnA',
-          'PC96cV9sRg4dGnQCdjn5q9lOcJcG6tFFlTQ77A2uZdYK9wNBKc7cM1zNXMXcjDTo0xUCHBhqYa2k',
-          '7ACSF1NZ0bBhkAGPVU4Q1noLjhpwQW25KVcCUGYmJih/Z4jyqu64lTejtlb0W3sASziD1RhmAAAA',
-          'AElFTkSuQmCC'
-        ].join("");
-
         L.TileLayer.Mask = L.TileLayer.extend({
           options: {
-            maskUrl: defaultMaskUrl,
             maskSize: 512
           },
           getMaskSize: function() {
@@ -155,21 +144,21 @@ export default function Map() {
     <MapContainer 
       center={[31.313354, -110.945987]} 
       zoom={7} 
-      style={{ height: '100vh', width: '100%' }}
+      style={{ height: '100vh', width: '100%', position: 'relative' }}
     >
-      {/* Base tile layer (this will be the background) */}
+      {/* Historical base tile layer */}
       <TileLayer
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        url="https://server.arcgisonline.com/ArcGIS/rest/services/NatGeo_World_Map/MapServer/tile/{z}/{y}/{x}"
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        minZoom={0}
+        maxZoom={16}
       />
       
-      {/* Masked tile layer that follows mouse (this reveals the foreground) */}
-      <CSSMaskedTileLayer />
+      {/* Clustered project markers (optional) */}
+      {showMarkers && <MapContent />}
       
-      {/* Project markers */}
-      {projects.map((project, idx) => (
-        <ProjectMarker project={project} key={idx} />
-      ))}
+      {/* Custom overlays */}
+      {children}
     </MapContainer>
   );
-}
+} 

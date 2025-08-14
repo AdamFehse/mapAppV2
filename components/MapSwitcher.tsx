@@ -3,31 +3,16 @@
 import React, { useState } from 'react';
 import dynamic from 'next/dynamic';
 
-// Dynamically import all map components
-const ObservableMap = dynamic(() => import('./ObservableMap'), { ssr: false });
-const BaseMap = dynamic(() => import('./BaseMap'), { ssr: false });
-const CSSMaskedTileLayer = dynamic(() => import('./CSSMaskedTileLayer').then(mod => ({ default: mod.CSSMaskedTileLayer })), { ssr: false });
+const Map = dynamic(() => import('./Map'), { ssr: false });
 
-type MapMode = 'observable' | 'base' | 'mask';
+type MapView = 'observable' | 'base';
 
 export default function MapSwitcher() {
-  const [mode, setMode] = useState<MapMode>('observable');
+  const [view, setView] = useState<MapView>('observable');
+  const [isMaskEnabled, setIsMaskEnabled] = useState(false);
 
-  const renderMap = () => {
-    switch (mode) {
-      case 'observable':
-        return <ObservableMap />;
-      case 'base':
-        return <BaseMap key="base-map" showMarkers={true} />;
-      case 'mask':
-        return (
-          <BaseMap key="mask-map" showMarkers={false}>
-            <CSSMaskedTileLayer />
-          </BaseMap>
-        );
-      default:
-        return <ObservableMap />;
-    }
+  const handleMaskToggle = () => {
+    setIsMaskEnabled(prevState => !prevState);
   };
 
   return (
@@ -48,49 +33,51 @@ export default function MapSwitcher() {
         <button
           style={{
             padding: '8px 16px',
-            backgroundColor: mode === 'observable' ? '#1976d2' : '#fff',
-            color: mode === 'observable' ? '#fff' : '#333',
+            backgroundColor: view === 'observable' ? '#1976d2' : '#fff',
+            color: view === 'observable' ? '#fff' : '#333',
             border: '1px solid #ccc',
             borderRadius: '4px',
             cursor: 'pointer',
-            fontWeight: mode === 'observable' ? 'bold' : 'normal'
+            fontWeight: view === 'observable' ? 'bold' : 'normal'
           }}
-          onClick={() => setMode('observable')}
+          onClick={() => setView('observable')}
         >
           Force Graph
         </button>
         <button
           style={{
             padding: '8px 16px',
-            backgroundColor: mode === 'base' ? '#1976d2' : '#fff',
-            color: mode === 'base' ? '#fff' : '#333',
+            backgroundColor: view === 'base' ? '#1976d2' : '#fff',
+            color: view === 'base' ? '#fff' : '#333',
             border: '1px solid #ccc',
             borderRadius: '4px',
             cursor: 'pointer',
-            fontWeight: mode === 'base' ? 'bold' : 'normal'
+            fontWeight: view === 'base' ? 'bold' : 'normal'
           }}
-          onClick={() => setMode('base')}
+          onClick={() => setView('base')}
         >
           Base Map
         </button>
         <button
           style={{
             padding: '8px 16px',
-            backgroundColor: mode === 'mask' ? '#1976d2' : '#fff',
-            color: mode === 'mask' ? '#fff' : '#333',
+            backgroundColor: isMaskEnabled ? '#1976d2' : '#fff',
+            color: isMaskEnabled ? '#fff' : '#333',
             border: '1px solid #ccc',
             borderRadius: '4px',
             cursor: 'pointer',
-            fontWeight: mode === 'mask' ? 'bold' : 'normal'
+            fontWeight: isMaskEnabled ? 'bold' : 'normal'
           }}
-          onClick={() => setMode('mask')}
+          onClick={handleMaskToggle}
         >
-          Mask Mode
+          Toggle Mask
         </button>
       </div>
-
-      {/* Render the selected map */}
-      {renderMap()}
+      <Map
+        view={view}
+        isMaskEnabled={isMaskEnabled}
+        showMarkers={view === 'base'}
+      />
     </div>
   );
-} 
+}

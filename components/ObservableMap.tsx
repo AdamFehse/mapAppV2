@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useEffect, useRef } from 'react';
-import { MapContainer, TileLayer, useMap } from 'react-leaflet';
+import { useEffect, useRef } from 'react';
+import { useMap } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import '../app/globals.css';
 import { useProjects, Project } from './useProjects';
@@ -35,8 +35,8 @@ function createMockMarkers(projects: Project[]) {
   }));
 }
 
-// Observable overlay component
-function ObservableOverlay() {
+// Observable overlay component is now exported
+export function ObservableOverlay() {
   const map = useMap();
   const svgRef = useRef<SVGElement | null>(null);
   const simulationRef = useRef<d3.Simulation<MarkerData, undefined> | null>(null);
@@ -166,29 +166,4 @@ function ObservableOverlay() {
   return null;
 }
 
-export default function ObservableMap() {
-  const { projects, error } = useProjects();
-
-  if (error) return <div>Error: {error}</div>;
-  if (!projects.length) return <div>Loading...</div>;
-
-  return (
-    <MapContainer 
-      center={[31.313354, -110.945987]}
-      zoom={6}
-      style={{ height: '100vh', width: '100%' }}
-      zoomControl={false}
-    >
-      {/* Base tile layer */}
-      <TileLayer
-        url="https://server.arcgisonline.com/ArcGIS/rest/services/NatGeo_World_Map/MapServer/tile/{z}/{y}/{x}"
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        minZoom={0}
-        maxZoom={16}
-      />
-      
-      {/* Observable overlay */}
-      <ObservableOverlay />
-    </MapContainer>
-  );
-} 
+// The default export wrapper has been removed.

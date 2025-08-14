@@ -34,3 +34,25 @@ body {
   border: 2px solid white;
   box-shadow: 0 0 4px rgba(0,0,0,0.3);
 }
+
+/* Ensure install prompt is above everything */
+.install-prompt {
+  position: fixed !important;
+  z-index: 999999 !important;
+  pointer-events: auto !important;
+}
+
+/* Override any map z-index issues */
+.leaflet-container {
+  z-index: 1 !important;
+}
+
+.leaflet-pane {
+  z-index: 1 !important;
+}
+
+/* Force install prompt to be on top */
+[style*="zIndex: 999999"] {
+  z-index: 999999 !important;
+  position: fixed !important;
+}

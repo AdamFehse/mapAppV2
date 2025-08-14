@@ -11,11 +11,11 @@
 
 ## PWA Features
 
-- **Offline Access** - researchers in the field can use it without internet
+'''- **Offline Access** - researchers in the field can use it without internet'''
 - **Voice Search** - "Show me music projects near Nogales"
 - **Camera Integration** - scan project QR codes, take photos of locations
 - **Geolocation** - "What projects are near me right now?"
-- **Installable** - researchers can add it to their devices
+- '''**Installable** - researchers can add it to their devices'''
 - **Data Export** - download project data for analysis
 
 ## Interactive Features

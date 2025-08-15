@@ -2,29 +2,29 @@
   "name": "Border Region Story Map",
   "short_name": "StoryMap",
   "description": "Interactive story map showcasing cultural projects in the Arizona-Sonora border region",
-  "start_url": "/",
+  "start_url": "/mapAppV2/",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#1f2937",
   "orientation": "portrait-primary",
-  "scope": "/",
+  "scope": "/mapAppV2/",
   "lang": "en",
   "categories": ["education", "travel", "utilities"],
   "icons": [
     {
-      "src": "/globe.svg",
+      "src": "/mapAppV2/globe.svg",
       "sizes": "any",
       "type": "image/svg+xml",
       "purpose": "any maskable"
     },
     {
-      "src": "/globe.svg",
+      "src": "/mapAppV2/globe.svg",
       "sizes": "192x192",
       "type": "image/svg+xml",
       "purpose": "any"
     },
     {
-      "src": "/globe.svg",
+      "src": "/mapAppV2/globe.svg",
       "sizes": "512x512",
       "type": "image/svg+xml",
       "purpose": "any"

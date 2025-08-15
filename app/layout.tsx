@@ -12,10 +12,11 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+// Remove manifest from metadata - we'll put it directly in head
 export const metadata: Metadata = {
   title: "Border Region Story Map",
   description: "Interactive story map showcasing cultural projects in the Arizona-Sonora border region",
-  manifest: "/mapAppV2/manifest.json", // Fixed path for GitHub Pages
+  // manifest: "/mapAppV2/manifest.json", // REMOVED - putting in head instead
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
@@ -42,6 +43,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
+        {/* Direct manifest link - bypasses Next.js metadata processing */}
         <link rel="manifest" href="/mapAppV2/manifest.json" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
